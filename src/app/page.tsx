@@ -1,101 +1,249 @@
-import Image from "next/image";
+// src/app/page.tsx
+'use client'
 
-export default function Home() {
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
+import Link from 'next/link'
+import { PublicLayout } from '@/components/layouts/public-layout'
+import { 
+  BuildingOfficeIcon,
+  DocumentTextIcon,
+  TicketIcon,
+  ChartBarIcon,
+  UserGroupIcon,
+  ShieldCheckIcon,
+  ClockIcon,
+  DevicePhoneMobileIcon
+} from '@heroicons/react/24/outline'
+
+export default function LandingPage() {
+  const { data: session, status } = useSession()
+  const router = useRouter()
+
+  // Redirect authenticated users to their dashboard
+  useEffect(() => {
+    if (status === 'authenticated' && session?.user) {
+      const redirectUrl = session.user.role === 'landlord_admin' ? '/dashboard' : '/tenant'
+      router.push(redirectUrl)
+    }
+  }, [session, status, router])
+
+  // Show loading while checking authentication
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    )
+  }
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <PublicLayout>
+      {/* Hero Section */}
+      <section className="py-20 lg:py-32">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6">
+              Property Management
+              <span className="block text-blue-600">Made Simple</span>
+            </h1>
+            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+              Connect landlords and tenants with powerful tools for ticket management, 
+              contract viewing, consumption tracking, and seamless communication.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href="/auth/signin"
+                className="bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-medium hover:bg-blue-700 transition-colors"
+              >
+                Get Started Free
+              </Link>
+              <Link
+                href="/demo"
+                className="border border-gray-300 text-gray-700 px-8 py-4 rounded-lg text-lg font-medium hover:border-gray-400 transition-colors"
+              >
+                View Demo
+              </Link>
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+              Everything You Need
+            </h2>
+            <p className="text-xl text-gray-600">
+              Comprehensive property management tools in one platform
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Building Management */}
+            <div className="text-center p-6">
+              <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <BuildingOfficeIcon className="w-8 h-8 text-blue-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Building Management</h3>
+              <p className="text-gray-600">
+                Manage multiple buildings, track units, and organize property data efficiently.
+              </p>
+            </div>
+
+            {/* Contract Management */}
+            <div className="text-center p-6">
+              <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <DocumentTextIcon className="w-8 h-8 text-blue-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Contract Management</h3>
+              <p className="text-gray-600">
+                Digital contracts with secure viewing, sharing, and tenant management.
+              </p>
+            </div>
+
+            {/* Ticket System */}
+            <div className="text-center p-6">
+              <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <TicketIcon className="w-8 h-8 text-blue-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Smart Ticketing</h3>
+              <p className="text-gray-600">
+                Streamlined maintenance requests and issue tracking for faster resolution.
+              </p>
+            </div>
+
+            {/* Consumption Tracking */}
+            <div className="text-center p-6">
+              <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <ChartBarIcon className="w-8 h-8 text-blue-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Consumption Analytics</h3>
+              <p className="text-gray-600">
+                Track utilities, analyze usage patterns, and manage consumption data.
+              </p>
+            </div>
+
+            {/* Multi-Tenant */}
+            <div className="text-center p-6">
+              <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <UserGroupIcon className="w-8 h-8 text-blue-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Multi-Tenant Support</h3>
+              <p className="text-gray-600">
+                Secure organization separation with role-based access controls.
+              </p>
+            </div>
+
+            {/* Document Management */}
+            <div className="text-center p-6">
+              <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <ShieldCheckIcon className="w-8 h-8 text-blue-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Secure Documents</h3>
+              <p className="text-gray-600">
+                Cloud storage for important documents with controlled access and sharing.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Benefits Section */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
+            <div>
+              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
+                Built for Modern Property Management
+              </h2>
+              <div className="space-y-6">
+                <div className="flex items-start space-x-4">
+                  <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <ClockIcon className="w-5 h-5 text-green-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-1">Save Time</h3>
+                    <p className="text-gray-600">
+                      Automate routine tasks and streamline communication between landlords and tenants.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-4">
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <ShieldCheckIcon className="w-5 h-5 text-blue-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-1">Enterprise Security</h3>
+                    <p className="text-gray-600">
+                      Row-level security, encrypted data, and role-based access controls protect your information.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-4">
+                  <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <DevicePhoneMobileIcon className="w-5 h-5 text-purple-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-1">Mobile Ready</h3>
+                    <p className="text-gray-600">
+                      Access your property management tools anywhere with our responsive design.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-12 lg:mt-0">
+              <div className="bg-white rounded-2xl shadow-xl p-8">
+                <div className="text-center mb-6">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">Ready to Start?</h3>
+                  <p className="text-gray-600">
+                    Join property managers who trust TenantBridge
+                  </p>
+                </div>
+                <div className="space-y-4">
+                  <Link
+                    href="/auth/signin"
+                    className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg text-center font-medium hover:bg-blue-700 transition-colors block"
+                  >
+                    Start Free Trial
+                  </Link>
+                  <Link
+                    href="/contact"
+                    className="w-full border border-gray-300 text-gray-700 px-6 py-3 rounded-lg text-center font-medium hover:border-gray-400 transition-colors block"
+                  >
+                    Contact Sales
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-blue-600">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
+            Transform Your Property Management Today
+          </h2>
+          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+            Join thousands of landlords and tenants who have simplified their property management with TenantBridge.
+          </p>
+          <Link
+            href="/auth/signin"
+            className="bg-white text-blue-600 px-8 py-4 rounded-lg text-lg font-medium hover:bg-gray-50 transition-colors inline-block"
+          >
+            Get Started Now
+          </Link>
+        </div>
+      </section>
+    </PublicLayout>
+  )
 }
